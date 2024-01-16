@@ -12,9 +12,9 @@ $router = $this;
 
 // $router->get('/', fn() => 'proof');
 
-$router->get('/', fn() => '<a href="valid">validate data</a><br><br>' . print_r(session()->allErrors(), true));
-$router->get('/valid', [SomeController::class, 'index']);
-$router->get('errors', [SomeController::class, 'err']);
+// $router->get('/', fn() => '<a href="valid">validate data</a><br><br>' . print_r(session()->allErrors(), true));
+$router->get('/', [SomeController::class, 'index']);
+// $router->get('errors', [SomeController::class, 'err']);
 // $router->get('/', fn() => Response::redirect('home'));
 
 /*
