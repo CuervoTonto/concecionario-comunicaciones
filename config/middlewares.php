@@ -4,16 +4,16 @@ use Src\Support\Configuration;
 
 return new Configuration([
     'aliases' => [
-        'proof' => 'Src\App\Middlewares\ProofMiddleware',
+        // 'proof' => 'Src\App\Middlewares\ProofMiddleware',
     ],
 
     'groups' => [
         'basic' => [
-            'proof:jason'
+            // 'proof:jason'
         ],
     ],
 
     'priority' => [
-        'Src\App\Middlewares\ProofMiddleware'
+        // 'Src\App\Middlewares\ProofMiddleware'
     ]
 ]);
