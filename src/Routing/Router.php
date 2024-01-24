@@ -9,6 +9,7 @@ use Src\Container\Container;
 use Src\Http\Request;
 use Src\Http\Response;
 use Src\Middleware\MiddlewarePipe;
+use Src\View\View;
 
 class Router
 {
@@ -285,7 +286,7 @@ class Router
     public function defaultFailAction(): mixed
     {
         return function () {
-            return new Response('404 no found', 404);
+            return new View(fromViews('404.php'));
         };
     }
 
