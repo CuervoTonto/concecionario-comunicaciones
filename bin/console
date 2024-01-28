@@ -1,3 +1,18 @@
-<?php
+#!usr/bin/env php
+<?php 
 
-exec('php -S localhost:3000 -t public');
+use Src\Classes\Globals;
+use Src\Console\Console;
+use Src\Console\Input\ArgvInput;
+
+require_once './src/autoload.php';
+
+Globals::add('console', $console = new Console());
+
+$console = new Console();
+
+try {
+    $console->handle(new ArgvInput());
+} catch (RuntimeException $e) {
+    echo '* ' . $e::class . ' => ' . $e->getMessage();
+}
