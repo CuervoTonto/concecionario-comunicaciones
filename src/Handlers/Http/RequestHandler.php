@@ -3,7 +3,6 @@
 namespace Src\Handlers\Http;
 
 use Closure;
-use SessionHandler;
 use Src\Classes\Globals;
 use Src\Container\Container;
 use Src\Http\Request;

@@ -1,119 +1,74 @@
-<?php 
+<?php
 
 namespace Src\Session;
 
-use Closure;
-use Src\Contracts\Repository\RepositoryInterface;
-
-class SessionRepository implements RepositoryInterface
+class SessionRepository
 {
     /**
      * session id
      */
-    private string $id;
+    private string $file;
 
     /**
-     * last fetch data
+     * creates a new instance of sessionRepository
+     * 
+     * @param string $path path of session file
      */
-    private array $data;
-
-    /**
-     * session options
-     */
-    private array $opts;
-
-    /**
-     * make a instance of class
-     */
-    public function __construct(string $id, array $options = [])
+    public static function new(string $path): static
     {
-        $this->data = [];
-        $this->id = $id;
-        $this->opts = $options;
-
-        $this->refresh();
+        return new static($path);
     }
 
     /**
-     * start php session
+     * build a new instance of sessionRepository
+     * 
+     * @param string $path path of session file
      */
-    public function open(): void
+    protected function __construct(string $path)
     {
-        session_id($this->id);
-        session_start($this->opts);
+        $this->file = $path;
+        $this->initialize();
     }
 
     /**
-     * close php session
+     * initialize respository
+     * 
+     * @return void
      */
-    public function close(): void
+    private function initialize(): void
     {
-        session_write_close();
+        if (! file_exists($this->file)) {
+            fclose(fopen($this->file, 'a+'));
+        }
     }
 
     /**
-     * execute a closure with the repository stream open and then close
+     * obtains data from repository
+     * 
+     * @return array
      */
-    public function action(Closure $action): mixed
+    public function fetch(): array
     {
-        $this->open();
-        $result = $action();
-        $this->close();
-        
-        return $result;
+        return unserialize(file_get_contents($this->file)) ?: [];
     }
 
     /**
-     * fetch the data
+     * save data on repository
+     * 
+     * @return void
      */
-    public function fetch(): mixed
+    public function save(array $newData): void
     {
-        return $this->action(function () {
-            return $_SESSION ?? [];
-        });
+        file_put_contents($this->file, serialize($newData), LOCK_EX);
     }
 
     /**
-     * get a data
-     */
-    public function get(string $name, mixed $default = null): mixed
-    {
-        return $this->data[$name] ?? $default;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function save(array $data): void
-    {
-        $this->action(function () use ($data) {
-            foreach ($data as $key => $value) $_SESSION[$key] = $value;
-        });
-
-        $this->refresh();
-    }
-
-    /**
-     * refresh the data using the one from repository
-     */
-    public function refresh(): void
-    {
-        $this->data = $this->fetch();
-    }
-
-    /**
-     * clear the data of repository
+     * clear data
+     * 
+     * @return void
      */
     public function clear(): void
     {
-        $this->data = [];
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function all(): array
-    {
-        return $this->data;
+        file_put_contents($this->file, serialize([]), LOCK_EX);
     }
 }

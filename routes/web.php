@@ -1,5 +1,6 @@
 <?php
 
+use Src\Http\Response;
 use Src\Routing\Router;
 use Src\View\View;
 

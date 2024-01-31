@@ -1,76 +1,84 @@
-<?php 
+<?php
 
 namespace Src\Session;
-
-use App\Application;
 use Src\Container\Container;
 use Src\Handlers\Http\RequestHandler;
-use Src\Http\Request;
 use Src\Http\Response;
-use Src\Http\ResponseCookie;
+use Src\Support\Configuration;
 
 class SessionInitiator
 {
+    /**
+     * request handler instance
+     */
+    private RequestHandler $handler;
+
     /**
      * container instance
      */
     private Container $container;
 
     /**
-     * Request handler instance
+     * configuration to sessions
      */
-    private RequestHandler $handler;
+    private Configuration $configuration;
 
     /**
-     * make a instance of class
-     * 
-     * @param Container $container container instacen
+     * build a instance of SessionInitiator
      */
     public function __construct(RequestHandler $handler, Container $container)
     {
         $this->handler = $handler;
         $this->container = $container;
+        $this->configuration = new SessionConfiguration();
     }
 
     /**
-     * make a session instance corresponding the request
+     * creates a session instance
+     * 
+     * @return Session
      */
-    protected function makeSession()
+    public function makeSession(): Session
     {
-        /** @var Request */
+        /** @var \Src\Http\Request */
         $request = $this->container->resolve('request');
-        /** @var ?string */
-        $id = $request->session();
+        $cookieName = $this->configuration->get('cookie.name');
+
+        $session = Session::new(
+            $id = $request->cookie($cookieName)?->getValue(),
+            $this->configuration->toArray(),
+        );
 
         if (is_null($id)) {
-            $this->handlerCreateCookie($id = session_create_id());
+            $this->handlerSetCookie($cookieName, $session->id());
         }
 
-        $this->handlerSaveSession($session = new Session($id));
+        $this->handlerSaveSession($session);
 
         return $session;
     }
 
     /**
-     * create session cookie on handled response
+     * add action to set session cookie on handler
      * 
-     * @param string $id session id used on cookie value
+     * @param string $cookie cookie's name
+     * @param string $value cookie's value
      * 
-     * @return void
+     * @return void 
      */
-    private function handlerCreateCookie(string $id): void
+    private function handlerSetCookie(string $name, string $value): void
     {
-        $action = function (Response $res) use ($id) {
-            $res->addCookie('SESSION_COOKIE', $id, 60 * 60 * 24);
+        $action = function (Response $response) use ($name, $value) {
+            $response->addCookie($name, $value, 86400 * 365);
         };
 
         $this->handler->addResponseAction($action);
     }
 
     /**
-     * save session data after the request hanled
+     * add action on handler to save session
      * 
-     * @param Session $session the instance of session
+     * @param Session $session session to save
      * 
      * @return void
      */
@@ -84,7 +92,7 @@ class SessionInitiator
     }
 
     /**
-     * initiate a session instance
+     * run initiator
      */
     public function run(): Session
     {
