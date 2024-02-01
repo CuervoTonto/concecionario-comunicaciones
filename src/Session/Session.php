@@ -244,6 +244,19 @@ class Session
     }
 
     /**
+     * check if error messages exists on session
+     * 
+     * @param string $name error's name
+     * 
+     * @return bool error exists
+     */
+    public function hasError(string $name): bool
+    {
+        return array_key_exists($name, $this->data['_flash.new']['_errors'])
+            || array_key_exists($name, $this->data['_flash.old']['_errors']);
+    }
+
+    /**
      * obtains old flash messages to errors
      * 
      * @param string $name error's name
