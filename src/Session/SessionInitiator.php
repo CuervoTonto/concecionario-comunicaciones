@@ -1,6 +1,7 @@
 <?php
 
 namespace Src\Session;
+
 use Src\Container\Container;
 use Src\Handlers\Http\RequestHandler;
 use Src\Http\Response;
