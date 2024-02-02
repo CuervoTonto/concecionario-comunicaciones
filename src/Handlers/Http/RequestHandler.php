@@ -9,10 +9,12 @@ use Src\Http\Request;
 use Src\Http\Response;
 use Src\Middleware\MiddlewareParser;
 use Src\Middleware\MiddlewarePipe;
+use Src\Routing\Route;
 use Src\Routing\Router;
 use Src\Session\Session;
 use Src\Session\SessionInitiator;
 use Src\Support\Configuration;
+use Src\Support\Url\UrlGenerator;
 
 class RequestHandler
 {
@@ -67,6 +69,7 @@ class RequestHandler
     {
         $this->container->instance('router', $this->createRouter());
         $this->container->instance('session', $this->createSession());
+        $this->container->instance('url', $this->createUrlGenerator());
     }
 
     /**
@@ -104,6 +107,19 @@ class RequestHandler
     private function createSession(): Session
     {
         return (new SessionInitiator($this, $this->container))->run();
+    }
+
+    /**
+     * create a instance of UrlGenerator with named routes
+     */
+    private function createUrlGenerator(): UrlGenerator
+    {
+        /** @var Router */
+        $router = $this->container->resolve('router');
+
+        return new UrlGenerator(array_map(function (Route $route) {
+            return $route->prefixUrl();
+        }, $router->allNamedRoutes()));
     }
 
     /**

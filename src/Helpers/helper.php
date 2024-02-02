@@ -4,6 +4,7 @@ use Src\Classes\Globals;
 use Src\Container\Container;
 use Src\Http\Request;
 use Src\Session\Session;
+use Src\Support\Url\UrlGenerator;
 
 if (! function_exists('fromBase')) {
     /**
@@ -66,5 +67,17 @@ if (! function_exists('request')) {
     function request(): Request
     {
         return container()->resolve('request');
+    }
+}
+
+if (! function_exists('url')) {
+    /**
+     * obtains the UrlGenerator instance from RequestHandler
+     * 
+     * @return UrlGenerator
+     */
+    function url(): UrlGenerator
+    {
+        return container()->resolve('url');
     }
 }

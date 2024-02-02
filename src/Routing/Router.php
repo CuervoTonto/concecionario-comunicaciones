@@ -299,4 +299,14 @@ class Router
             $this->fail ?? $this->defaultFailAction(),
         );
     }
+
+    /**
+     * obtains all the routes registered with a name
+     * 
+     * @return array<Route>
+     */
+    public function allNamedRoutes(): array
+    {
+        return $this->nameRoutes ?? [];
+    }
 }

@@ -2,117 +2,72 @@
 
 namespace Src\Support;
 
-use Src\Support\Collection\Collection;
+use RuntimeException;
 
-class Url
+/**
+ * class help with the creation of url
+ */
+final class Url
 {
     /**
-     * default port for url
+     * list of url associate with a name
+     * 
+     * @var array<string, string>
      */
-    public const DEFAULT_PORT = 80;
+    public array $linkedUrls;
 
     /**
-     * scheme using on url
+     * build a instance of Url
+     * 
+     * @param array<string, string>
      */
-    private string $scheme;
-
-    /**
-     * domain of url
-     */
-    private string $host;
-
-    /**
-     * port of url
-     */
-    private string $port;
-
-    /**
-     * resources route
-     */
-    private string $uri;
-
-    /**
-     * query data
-     */
-    private array $querys;
-
-    /**
-     * make a url from string
-     */
-    public static function fromString(string $url): Url
+    public function __construct(array $linkedUrls = [])
     {
-        $host = parse_url($url, PHP_URL_HOST);
-        $port = parse_url($url, PHP_URL_PORT) ?: '';
-        $uri = parse_url($url, PHP_URL_PATH) ?: '';
-        $scheme = parse_url($url, PHP_URL_SCHEME) ?: '';
-        parse_str(parse_url($url, PHP_URL_QUERY) ?: '', $querys);
-
-        return new Url($host, $port, $uri, $querys, $scheme);
+        $this->linkedUrls = $linkedUrls;
     }
 
     /**
-     * make a instance of class
+     * bind the parameters for the url
+     * 
+     * @param string $url the url to bind
+     * @param array<string|int, string> $bindings value to use on bind
+     * 
+     * @return string
      */
-    public function __construct(string $host, string $port = '', string $uri = '/', array $querys = [], string $scheme = 'http')
+    public function bind(string $url, array $bindings = []): string
     {
-        $this->host = $host;
-        $this->port = $port ?: $this::DEFAULT_PORT;
-        $this->uri = $uri;
-        $this->querys = $querys;
-        $this->scheme = $scheme ?: 'http';
+        preg_match_all('/(?<={)[^}]*(?=})/', $url, $parameters);
+
+        if (count($parameters) > count($bindings)) {
+            throw new RuntimeException('Missing url bindings');
+        }
+
+        foreach ($parameters as $ind => $param) {
+            $value = $bindings[match (true) {
+                array_key_exists($param, $bindings) => $param,
+                array_key_exists($ind, $bindings) => $ind,
+            }];
+
+            $url = preg_replace("/{{$param}}/", $value, $url, 1);
+        }
+
+        return $url;
     }
 
     /**
-     * get the host from url
+     * obtains url from linked and bind it
+     * 
+     * @param string $link the name/index of the element
+     * @param array<string|int, string> $bindings value to use on bind
+     * 
+     * @return string
      */
-    public function getHost(): string
+    public function linked(string $link, array $bindings = []): string
     {
-        return $this->host;
-    }
+        if (! array_key_exists($link, $this->linkedUrls)) {
+            throw new RuntimeException("No found linked url [{$link}]");
+        }
 
-    /**
-     * get the port from url
-     */
-    public function getPort(): string
-    {
-        return $this->port;
-    }
-
-    /**
-     * get the uri from url
-     */
-    public function getUri(): string
-    {
-        return $this->uri;
-    }
-
-    /**
-     * get the query string from url
-     */
-    public function getQuerys(): array
-    {
-        return $this->querys;
-    }
-
-    /**
-     * get the query like a string
-     */
-    public function getStringQuery(): string
-    {
-        return http_build_query($this->querys);
-    }
-
-    /**
-     * get the url like string
-     */
-    public function toString(): string
-    {
-        return sprintf(
-            '%s://%s/%s%s',
-            $this->scheme,
-            $this->host,
-            $this->uri,
-            ($q = $this->getStringQuery()) ? '?' . $q : ''
-        );
+        return $this->bind($this->linkedUrls[$link], $bindings);
     }
 }

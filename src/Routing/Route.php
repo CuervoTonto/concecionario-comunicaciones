@@ -170,8 +170,6 @@ class Route
 
     /**
      * set the middlewares of the route
-     * 
-     * @todo
      */
     public function setMiddlewares(array $middlewares): void
     {
@@ -180,7 +178,11 @@ class Route
     }
 
     /**
-     * @todo
+     * add middleware to route
+     * 
+     * @param string ...$middlewares middleware(s)
+     * 
+     * @return $this
      */
     public function middleware(string ...$middlewares): static
     {
