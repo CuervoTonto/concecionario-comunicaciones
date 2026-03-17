@@ -369,4 +369,9 @@ class Session
     {
         return $this->id;
     }
+
+    public function repository(): SessionRepository
+    {
+        return $this->repository;
+    }
 }

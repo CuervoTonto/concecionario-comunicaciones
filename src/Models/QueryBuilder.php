@@ -42,12 +42,12 @@ class QueryBuilder extends Builder
     /**
      * create register
      */
-    public function create(array $data): Model
+    public function create(array $data): ?Model
     {
         if (! parent::insert($data)) return null;
 
         return $this->model::query()->where(
-            'id', parent::getConnection()->pdo()->lastInsertId()
+            $this->model::_primary(), parent::getConnection()->pdo()->lastInsertId()
         )->first();
     }
 

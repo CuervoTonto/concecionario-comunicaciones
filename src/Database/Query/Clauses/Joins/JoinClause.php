@@ -113,7 +113,7 @@ class JoinClause
      * 
      * @return $this
      */
-    public function on(string $first, string $operation, string $second = null): static
+    public function on(string $first, string $operation, ?string $second = null): static
     {
         if (is_null($second)) {
             [$second, $operation] = [$operation, '='];

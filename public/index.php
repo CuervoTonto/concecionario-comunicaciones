@@ -8,6 +8,7 @@ use Src\Http\Request;
 // define('APP_START', microtime(true));
 
 require_once __DIR__ . '/../src/autoload.php';
+require_once __DIR__ . '/../src/Helpers/path.helper.php';
 require_once __DIR__ . '/../src/Helpers/helper.php';
 
 Globals::add('app_base', dirname(__DIR__));

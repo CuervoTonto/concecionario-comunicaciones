@@ -5,8 +5,10 @@ use Src\Classes\Globals;
 use Src\Console\Console;
 use Src\Console\Input\ArgvInput;
 
-require_once './src/autoload.php';
+require_once __DIR__ . '/../src/Helpers/path.helper.php';
+require_once __DIR__ . '/../src/autoload.php';
 
+Globals::add('app_base', dirname(__DIR__));
 Globals::add('console', $console = new Console());
 
 $console = new Console();

@@ -130,8 +130,8 @@ class Validator
      * @param null|RepositoryInterface $save repository where save the errors
      */
     public function validateRedirect(
-        string $url = null,
-        RepositoryInterface $save = null
+        ?string $url = null,
+        ?RepositoryInterface $save = null
     ): void {
         if ($this->validate() === true) {
             return;

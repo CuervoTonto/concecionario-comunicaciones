@@ -136,7 +136,7 @@ abstract class Model
     {
         if (static::query()->where($this->original)->update($data)) {
             $this->setAttributes(
-                $this->find($this->id)->toArray()
+                $this->find($this->attributes[$this->_primary()])->toArray()
             );
         }
 
@@ -260,9 +260,9 @@ abstract class Model
      */
     public static function innerJoin(
         string $from,
-        string $first = null,
-        string $operation = null,
-        string $second = null,
+        ?string $first = null,
+        ?string $operation = null,
+        ?string $second = null,
     ): QueryBuilder {
         return static::query()->innerJoin($from, $first, $operation, $second);
     }
@@ -281,9 +281,9 @@ abstract class Model
     public static function innerJoinSub(
         Builder $from,
         string $as,
-        string $first = null,
-        string $operation = null,
-        string $second = null,
+        ?string $first = null,
+        ?string $operation = null,
+        ?string $second = null,
     ): QueryBuilder {
         return static::query()->innerJoinSub($from, $as, $first, $operation, $second);
     }
@@ -300,9 +300,9 @@ abstract class Model
      */
     public static function leftJoin(
         string $from,
-        string $first = null,
-        string $operation = null,
-        string $second = null,
+        ?string $first = null,
+        ?string $operation = null,
+        ?string $second = null,
     ): QueryBuilder {
         return static::query()->leftJoin($from, $first, $operation, $second);
     }
@@ -321,9 +321,9 @@ abstract class Model
     public static function leftJoinSub(
         Builder $from,
         string $as,
-        string $first = null,
-        string $operation = null,
-        string $second = null,
+        ?string $first = null,
+        ?string $operation = null,
+        ?string $second = null,
     ): QueryBuilder {
         return static::query()->leftJoinSub($from, $as, $first, $operation, $second);
     }
@@ -340,9 +340,9 @@ abstract class Model
      */
     public static function rightJoin(
         Builder|string $from,
-        string $first = null,
-        string $operation = null,
-        string $second = null,
+        ?string $first = null,
+        ?string $operation = null,
+        ?string $second = null,
     ): QueryBuilder {
         return static::query()->rightJoin($from, $first, $operation, $second);
     }
@@ -361,9 +361,9 @@ abstract class Model
     public static function rightJoinSub(
         Builder $from,
         string $as,
-        string $first = null,
-        string $operation = null,
-        string $second = null,
+        ?string $first = null,
+        ?string $operation = null,
+        ?string $second = null,
     ): QueryBuilder {
         return static::query()->rightJoinSub($from, $as, $first, $operation, $second);
     }

@@ -2,7 +2,9 @@
 
 namespace Src\Session;
 
-class SessionRepository
+use Src\Contracts\Repository\RepositoryInterface;
+
+class SessionRepository implements RepositoryInterface
 {
     /**
      * session id
@@ -70,5 +72,10 @@ class SessionRepository
     public function clear(): void
     {
         file_put_contents($this->file, serialize([]), LOCK_EX);
+    }
+
+    public function all(): array
+    {
+        return $this->fetch();
     }
 }

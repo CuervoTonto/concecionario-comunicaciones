@@ -20,8 +20,9 @@ class Console
      * @var array<string, string>
      */
     protected $commands = [
-        'server' => \Src\Console\Commands\ServerCommand::class,
-        'list' => \Src\Console\Commands\ListCommand::class,
+        'server'  => \Src\Console\Commands\ServerCommand::class,
+        'list'    => \Src\Console\Commands\ListCommand::class,
+        'migrate' => \Src\Console\Commands\MigrateCommand::class,
     ];
 
     /**

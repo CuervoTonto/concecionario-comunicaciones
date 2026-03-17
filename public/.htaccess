@@ -1,0 +1,8 @@
+RewriteEngine On
+
+# Si la ruta no es un archivo real (-f) ni un directorio real (-d)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Redirige todo a index.php
+RewriteRule ^ index.php [L]

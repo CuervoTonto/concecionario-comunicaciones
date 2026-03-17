@@ -2,6 +2,8 @@
 
 namespace Src\App\Controllers;
 
+use Src\Exceptions\ResponseException;
+use Src\Http\Response;
 use Src\Validator\Validator;
 
 abstract class Controller
@@ -24,11 +26,14 @@ abstract class Controller
     ): Validator {
         $validator = new Validator($data, $validations, $messages);
 
-        $validator->validateRedirect(
-            request()->referer() ?? $url,
-            session()->repository(),
-        );
+        if ($validator->validate() === true) {
+            return $validator;
+        }
 
-        return $validator;
+        foreach ($validator->errors() as $field => $error) {
+            session()->error($field, $error);
+        }
+
+        throw new ResponseException(Response::redirect($url));
     }
 }

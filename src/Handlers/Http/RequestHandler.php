@@ -49,6 +49,7 @@ class RequestHandler
     public function handle(Request $request): Response
     {
         $this->container->instance('request', $request);
+        $this->container->instance(Request::class, $request);
         $this->registerInstances();
 
         $res = $this->container()->resolve('router')->handle($request);
