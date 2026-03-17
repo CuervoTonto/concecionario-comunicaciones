@@ -52,7 +52,7 @@ final class ClassLoader
      */
     private function fileFromClass(string $class): string
     {
-        return sprintf('%s/%s.php', $this->dir, $class);
+        return str_replace("\\", "/", sprintf('%s/%s.php', $this->dir, lcfirst($class)));
     }
 
     /**
