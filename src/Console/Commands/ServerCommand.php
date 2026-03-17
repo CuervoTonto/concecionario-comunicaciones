@@ -30,8 +30,16 @@ class ServerCommand extends BaseCommand
     {
         return [
             new InputLongOption('host', InputTokenMode::OPTIONAL, '127.0.0.1'),
-            new InputLongOption('port', InputTokenMode::OPTIONAL, '3000'),
+            new InputLongOption('port', InputTokenMode::OPTIONAL, '8000'),
             new InputLongOption('root', InputTokenMode::OPTIONAL, 'public'),
         ];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function description(): string
+    {
+        return 'Start Buit-in server for development';
     }
 }

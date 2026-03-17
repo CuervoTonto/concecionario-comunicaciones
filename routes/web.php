@@ -10,3 +10,7 @@ $router = $this;
 $router->get('/', function () {
     return new View(fromViews('working.php'));
 });
+
+$router->get('/hola', function () {
+    return "hoal";
+});

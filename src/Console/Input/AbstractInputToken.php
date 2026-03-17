@@ -44,7 +44,7 @@ abstract class AbstractInputToken
     public function __construct(
         string $name,
         array|InputTokenMode $mode,
-        string $value = null,
+        ?string $value = null,
     ) {
         $this->setName($name);
         $this->setMode($mode);

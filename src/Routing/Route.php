@@ -55,7 +55,7 @@ class Route
         Closure|array|string $action,
         ?string $name = null,
         array $middlewares = [],
-        Container $container = null,
+        ?Container $container = null,
     ) {
         $this->url = '/' . trim($url, '/');
         $this->methods = $methods;
